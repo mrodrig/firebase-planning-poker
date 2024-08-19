@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/authentication';
 
 export const LOGIN_ROUTE_PATH = '/login',
-  DASHBOARD_ROUTE_PATH = '/dashboard';
+  ROOMS_ROUTE_PATH = '/rooms';
 
 const redirectForLogin = async (to, from, next) => {
   const authStore = useAuthStore();
@@ -10,12 +10,12 @@ const redirectForLogin = async (to, from, next) => {
   if (!authStore.user && to.path !== LOGIN_ROUTE_PATH) {
     return next(LOGIN_ROUTE_PATH);
   } else if (authStore.user && to.path === LOGIN_ROUTE_PATH || to.name === 'home') {
-    return next(DASHBOARD_ROUTE_PATH);
+    return next(ROOMS_ROUTE_PATH);
   }
-  
+
   next();
 };
-  
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -25,20 +25,25 @@ const router = createRouter({
       beforeEnter: redirectForLogin
     },
     {
-      path: DASHBOARD_ROUTE_PATH,
-      name: 'dashboard',
-      component: () => import('../views/DashboardView.vue')
+      path: ROOMS_ROUTE_PATH,
+      name: 'planning-rooms',
+      component: () => import('../views/RoomsListView.vue')
     },
     {
-      path: '/reports',
-      name: 'reports',
-      component: () => import('../views/ReportsView.vue')
+      name: 'room-creation',
+      path: '/create-room',
+      component: () => import('@/views/CreateRoomView.vue')
     },
     {
       path: LOGIN_ROUTE_PATH,
       name: 'login',
       component: () => import('../views/LoginView.vue')
     },
+    {
+      path: '/:matchAllOthers(.*)*',
+      name: 'notfound',
+      component: () => import('@/views/NotFoundView.vue')
+    }
   ]
 })
 

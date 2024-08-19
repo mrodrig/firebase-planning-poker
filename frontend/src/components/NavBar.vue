@@ -11,8 +11,8 @@ export default {
   },
   data: () => ({
     navigation: [
-      { name: 'Dashboard', href: '/' },
-      { name: 'Reports', href: '/reports' },
+      { name: 'Planning Rooms', href: '/' },
+      { name: 'Create Room', href: '/create-room' },
     ]
   }),
   computed: {
