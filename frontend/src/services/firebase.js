@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, setPersistence, browserLocalPersistence, signInWithPopup, signOut, GoogleAuthProvider } from 'firebase/auth';
 import { getPerformance, trace } from 'firebase/performance';
-import { getFirestore, collection, addDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, doc, updateDoc, setDoc } from 'firebase/firestore';
 import * as firebaseConfiguration from '@/config/firebase';
 
 // Docs: https://www.npmjs.com/package/firebase
@@ -52,15 +52,30 @@ export default class Firebase {
         return signOut(auth);
     }
 
-    static async firestoreSave(collectionName, document) {
-        const collectionRef = collection(collectionName);
-        return addDoc(collectionRef, document)  
+    static async createRoom(roomId, roomData) {
+        const roomRef = doc(firestore, `rooms/${roomId}`);
+        console.log(roomData);
+        return setDoc(roomRef, roomData);
     }
 
-    static async firestoreRead(collectionPath, id) {
-        const collectionRef = doc(firestore, collectionPath, id);
-        return addDoc(collectionRef, document)
-    }
+    // static async firestoreSave(collectionName, document) {
+    //     const collectionRef = collection(collectionName);
+    //     return addDoc(collectionRef, document)
+    // }
+
+    // static async setInSubCollection(collection, docId, subCollection, subDocId, document) {
+    //     const collectionRef = collection(collectionName);
+    //     const documentRef = collectionRef.doc(docId);
+    //     const subCollectionRef = documentRef.collection(subCollection);
+    //     const subDocumentRef = collectionRef.doc(subDocId);
+
+    //     return updateDoc(subDocumentRef, document)
+    // }
+
+    // static async firestoreRead(collectionPath, id) {
+    //     const collectionRef = doc(firestore, collectionPath, id);
+    //     return addDoc(collectionRef, document)
+    // }
 
     static createPerformanceTrace(name, attributes = {}) {
         const performanceTrace = trace(performance, name);
