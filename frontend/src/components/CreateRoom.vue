@@ -30,6 +30,7 @@ export default {
       try {
         const roomId = uuidv4();
         this.room.sizes = this.room.sizes.split(',');
+        this.room.createdAt = new Date();
         await Firebase.createRoom(roomId, this.room);
 
         this.initializeRoom();
