@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, setPersistence, browserLocalPersistence, signInWithPopup, signOut, GoogleAuthProvider } from 'firebase/auth';
 import { getPerformance, trace } from 'firebase/performance';
-import { getFirestore, collection, addDoc, doc, updateDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, orderBy, limit, doc, setDoc, getDocs } from 'firebase/firestore';
 import * as firebaseConfiguration from '@/config/firebase';
 
 // Docs: https://www.npmjs.com/package/firebase
@@ -54,8 +54,29 @@ export default class Firebase {
 
     static async createRoom(roomId, roomData) {
         const roomRef = doc(firestore, `rooms/${roomId}`);
-        console.log(roomData);
         return setDoc(roomRef, roomData);
+    }
+
+    static async getMyRooms(offsetDoc = null, maxRooms = 5) {
+        const currentUser = await this.getCurrentUser();
+        console.log('uid', currentUser?.uid);
+        const roomsCollectionRef = collection(firestore, 'rooms');
+        let queryPlan = query(
+            roomsCollectionRef,
+            where('createdById', '==', currentUser?.uid),
+            orderBy('createdAt', 'desc'),
+            limit(maxRooms)
+        );
+
+        if (offsetDoc) {
+            queryPlan = query(queryPlan, startAfter(offsetDoc));
+        }
+
+        const snapshot = await getDocs(queryPlan);
+        return snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
     }
 
     // static async firestoreSave(collectionName, document) {
