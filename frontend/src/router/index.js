@@ -35,6 +35,11 @@ const router = createRouter({
       component: () => import('@/views/CreateRoomView.vue')
     },
     {
+      name: 'planning-room',
+      path: '/room/:roomId',
+      component: () => import('@/views/RoomView.vue')
+    },
+    {
       path: LOGIN_ROUTE_PATH,
       name: 'login',
       component: () => import('../views/LoginView.vue')

@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     generateLink(room) {
-      return `/rooms/${room.id}`;
+      return `/room/${room.id}`;
     }
   }
 }
@@ -48,18 +48,24 @@ export default {
       </div>
 
       <div v-else>
-        <Disclosure v-for="room in myRooms" :key="room.id">
-          <DisclosureButton 
+        <Disclosure v-for="room in myRooms" :key="room.id" class="px-8">
+          <DisclosureButton
             as="a"
             :href="generateLink(room)"
-            class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">
-              {{ room.name }}
+            class="text-gray-300 text-xl hover:bg-gray-700 hover:text-cyan-500 block rounded-md px-3 py-2 text-base font-medium">
+              <div>
+                {{ room.name }}
+              </div>
+              <div class="text-sm">
+                <div>Created by: {{ room.createdBy }}</div>
+                <div>Room ID: {{ room.id }}</div>
+              </div>
             </DisclosureButton>
         </Disclosure>
       </div>
     </div>
 
-    <SectionHeader title="Previously Joined Rooms" />
+    <!-- <SectionHeader title="Previously Joined Rooms" /> -->
 
   </div>
 </template>
